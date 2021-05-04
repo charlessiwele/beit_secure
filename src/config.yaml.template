@@ -1,0 +1,19 @@
+invoices_items_per_page: 15
+quotation_items_per_page: 15
+
+bank_details:
+    bank_name: ABSA
+    account_holder: C Siwele
+    account_no: 1234567890
+    account_type: Business cheque/current
+
+email_smtp_server: mail.domain.co.za
+sender_email: test@domain.co.za
+sender_email_password: password@1
+bcc_sender_email: email@domain.com
+email_retries_count: 4
+
+server_ip_address: 127.0.0.1
+
+image_count_limit: 5
+organisation_logo: invoice_logo.png
