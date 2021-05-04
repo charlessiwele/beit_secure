@@ -4,7 +4,6 @@ import string
 from shutil import copyfile
 
 import face_recognition
-import requests
 from settings import FACE_SEC_KNOWN_FACES_DIRECTORY, FACE_SEC_UNKNOWN_FACES_DIRECTORY
 
 known_faces_directory_list = os.listdir(FACE_SEC_KNOWN_FACES_DIRECTORY)
@@ -54,24 +53,23 @@ def remove_known_faces_file(known_faces_file_path):
 
 
 def generate_random_file_and_directory_names(how_long=25):
-    # https://www.educative.io/edpresso/how-to-generate-a-random-string-in-python
-    # printing lowercase
+    ## printing lowercase
     # letters = string.ascii_lowercase
     # print(''.join(random.choice(letters) for i in range(10)))
-    #
-    # # printing uppercase
+
+    ## printing uppercase
     # letters = string.ascii_uppercase
     # print(''.join(random.choice(letters) for i in range(10)))
-    #
-    # # printing digits
+
+    ## printing digits
     # letters = string.digits
     # print(''.join(random.choice(letters) for i in range(10)))
-    #
-    # # printing punctuation
+
+    ## printing punctuation
     # letters = string.punctuation
     # print(''.join(random.choice(letters) for i in range(10)))
 
-    # # printing letters
+    ## printing letters
     letters = string.ascii_letters
     letters_result = ''.join(random.choice(letters) for i in range(how_long))
     print(letters_result)
@@ -87,18 +85,3 @@ def save_unkown_image(img_path_io):
     outfile.close()
     return image_destination
 
-
-def post_kown_image_for_save(img_path, destination_path):
-    url = 'http://127.0.0.1:8000/face_sec/store_image/'
-    with open(img_path, 'rb') as img:
-        name_img = os.path.basename(img_path)
-        files = {
-            'image': (name_img, img, 'multipart/form-data', {'Expires': '0'})
-        }
-        data = {
-            'destination_path': destination_path
-        }
-
-        with requests.Session() as s:
-            r = s.post(url, files=files, data=data)
-            print(r.status_code)
