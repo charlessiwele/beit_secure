@@ -9,19 +9,19 @@
 #### Draw rectangles around detected faces
 #### Triggered video recording on face detection
 #### Triggered image capture on face detection
-### Folder generation helper function
+#### Folder generation helper function
 
 ## Setting up
-## Copy config.yaml.template and rename config.yaml
-## Provide valid details in the config.yaml file
-## Generate a virtual environment
-## Run pip install -r requirements.txt
-## Once libs are installed, the Following files will become functional and utilisable:   
-### send_email_with_pdf_attachments
-### FileHandler
-### FileSystemHandler
-### camera_services
-### face_sec_services
+### Copy config.yaml.template and rename config.yaml
+### Provide valid details in the config.yaml file
+### Generate a virtual environment
+### Run pip install -r requirements.txt
+### Once libs are installed, the Following files will become functional and utilisable:   
+#### send_email_with_pdf_attachments
+#### FileHandler
+#### FileSystemHandler
+#### camera_services
+#### face_sec_services
 
 ## Disclaimer
 ### I give no guarantees as to the current or future availability functionality or efficacy of any features provided 
