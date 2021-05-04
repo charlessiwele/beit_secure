@@ -5,7 +5,7 @@ from excel_handlers.services.ExcelHandler import ExcelHandler
 from excel_handlers.services.FileSystemHandler import FileSystemHandler
 
 
-class FileGenerator:
+class FileHandler:
     @staticmethod
     def generate_excel_file_data(multi_row_data=(['row 1, col 1', 'row 1, col 2'], ['row 2, col 1', 'row 2, col 2']),
                                  read_file_name: str = 'in_files_source.xls',
