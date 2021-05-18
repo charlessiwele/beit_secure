@@ -14,10 +14,11 @@ for image_name in unprocessed_images:
     known_faces_directory = ''
     if len(image_path_results) > 0:
         known_faces_directory = image_path_results[0]
+        # TODO: create sqlite db record for the captured images
     else:
         image_path_basename = os.path.basename(image_path).split('.')[0]
         known_faces_directory = create_known_faces_directory(image_path_basename)
     copy_face_to_known_faces_directory(image_path, known_faces_directory)
     remove_faces_file(image_path)
-
-# TODO: record captured images records in sqlit db
+    # TODO: return sqlite db record for the captured images
+    # TODO: Add record to sqlite db to reflect captured images transaction
