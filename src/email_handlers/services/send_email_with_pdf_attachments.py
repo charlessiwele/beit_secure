@@ -29,7 +29,7 @@ class EmailManager:
         msg = EmailMessage()
         msg['From'] = email_user
         msg['To'] = email_send
-        msg['Bcc'] = bcc_email_send
+        msg['Cc'] = bcc_email_send
         msg['Subject'] = subject
 
         body = email_body

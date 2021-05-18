@@ -1,6 +1,4 @@
-import datetime
 from fpdf import FPDF
-from data_center.models import InvoiceProduct, QuotationProduct
 
 
 class PdfHandler:
@@ -79,45 +77,4 @@ class PdfHandler:
     def _output(self, name='', dest=''):
         return self.pdf_handler.output(name, dest)
 
-    @staticmethod
-    def generate_invoice_product_display_name(invoice_product):
-        from_date = invoice_product.check_in
-        to_date = invoice_product.check_out
-        stay_length_concat = ''
-        if to_date and from_date:
-            display_from = datetime.date(from_date.year,from_date.month,from_date.day).strftime('%d/%m/%Y')
-            display_to = datetime.date(to_date.year,to_date.month,to_date.day).strftime('%d/%m/%Y')
-            stay_length_concat = f'({display_from} - {display_to})'
-        return f'{invoice_product.product.product_name} {stay_length_concat}'
-
-    @staticmethod
-    def get_total(data):
-        """ This function calculates a total amount due, for the passed data, to be written to the invoice """
-        total = 0.0
-        products = []
-        if data.get("invoiceproduct_set"):
-            products = data.get("invoiceproduct_set")
-        elif data.get("quotationproduct_set"):
-            products = data.get("quotationproduct_set")
-        total = 0
-        for product in products:
-            days_of_service = 1
-            if product.check_out and product.check_in:
-                days_of_service = 1
-                if product.check_out > product.check_in:
-                    days_of_service = product.check_out - product.check_in
-                    days_of_service = days_of_service.days
-            product_quantity = product.product_quantity
-            product_price = product.product.product_price
-            product_total = days_of_service * float(product_price) * float(product_quantity)
-            total = total + product_total
-
-        return '%.2f' % total
-
-    @staticmethod
-    def calculate_number_of_pages(data):
-        """ Uses the number of products to calculate the number of pages required in the invoice """
-        products = data["products"]
-
-        return int(len(products) / 15) + 1
 

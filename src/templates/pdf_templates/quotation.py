@@ -1,6 +1,6 @@
 from fpdf import FPDF
 
-from filerp.settings import ORGANISATION_LOGO, QUOTATION_ITEMS_PER_PAGE, QUOTATION_ITEMS_PER_PAGE
+from src.settings import ORGANISATION_LOGO, QUOTATION_ITEMS_PER_PAGE
 
 
 class QuotationTemplate:

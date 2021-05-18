@@ -66,7 +66,7 @@ class ExcelHandler:
         return row
 
     @staticmethod
-    def write_worksheet(file_name_path: any, sheet_name: str, multi_row_data: []):
+    def write_worksheet(file_name_path: any, sheet_name: str, multi_row_data: [], starting_row_index = 0):
         if not os.path.exists(file_name_path):
             write_workbook: xlwt.Workbook = ExcelHandler.create_workbook()
             write_workbook_sheet: xlwt.Worksheet = ExcelHandler.create_workbook_sheet(write_workbook, sheet_name)
@@ -78,7 +78,7 @@ class ExcelHandler:
             else:
                 write_workbook_sheet: xlrd.sheet = write_workbook.add_sheet(sheet_name)
 
-        row_index = 0
+        row_index = starting_row_index
         for array_values in multi_row_data:
             ExcelHandler.write_worksheet_row(write_workbook_sheet, array_values, row_index)
             row_index += 1

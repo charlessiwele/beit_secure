@@ -12,6 +12,8 @@ app_config = yaml.load(file, Loader=yaml.FullLoader)
 
 ORGANISATION_LOGO_DIRECTORY = os.path.join(SRC_DIR, 'public/images/logos/')
 ORGANISATION_LOGO = os.path.join(ORGANISATION_LOGO_DIRECTORY, app_config.get('organisation_logo'))
+QUOTATION_ITEMS_PER_PAGE = os.path.join(ORGANISATION_LOGO_DIRECTORY, app_config.get('organisation_logo'))
+ORGANISATION_LOGO = os.path.join(ORGANISATION_LOGO_DIRECTORY, app_config.get('organisation_logo'))
 
 PDF_FILES_DIRECTORY = os.path.join(SRC_DIR, 'public/pdf')
 
@@ -30,7 +32,7 @@ EXCEL_IN_FILE_SOURCE = os.path.join(SRC_DIR, 'excel_files/in_files_source')
 
 EXCEL_OUT_FILE_SOURCE = os.path.join(SRC_DIR, 'excel_files/out_files_source')
 
-FACE_CASCADE_PATH = os.path.join(SRC_DIR, "haarcascade_frontalface_default.xml")
+FACE_CASCADE_PATH = os.path.join(SRC_DIR, "haarcascade_frontalface.xml")
 
 FOLDER_COLLECTION = [
     ORGANISATION_LOGO_DIRECTORY,
@@ -59,3 +61,6 @@ INVOICE_ITEMS_PER_PAGE = app_config.get('invoices_items_per_page')
 BANK_DETAILS = app_config.get('bank_details')
 
 IMAGE_COUNT_LIMIT = app_config.get('image_count_limit')
+
+DEFAULT_FILE_WRITE_NAME = 'out_files_source.xls'
+DEFAULT_FILE_READ_NAME = 'in_files_source.xls'

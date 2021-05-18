@@ -20,12 +20,13 @@ def valid_video_capture_devices():
 
 def generate_name(file_type='image'):
     file_date_time_taken = datetime.now().strftime('%Y%m%d%H%M%S')
-    file_name = datetime.now().strftime(f'{file_date_time_taken}.jpg')
-    file_location = None
+    file_name = datetime.now().strftime(f'{file_date_time_taken}')
     if file_type == 'image':
-        file_location = os.path.join(UNPROCESSED_IMAGES_DIRECTORY, file_name + '.avi')
+        os.makedirs(UNPROCESSED_IMAGES_DIRECTORY, exist_ok=True)
+        file_location = os.path.join(UNPROCESSED_IMAGES_DIRECTORY, file_name + '.jpg')
     else:
-        file_location = os.path.join(UNPROCESSED_VIDEOS_DIRECTORY, file_name + 'jpg')
+        os.makedirs(UNPROCESSED_VIDEOS_DIRECTORY, exist_ok=True)
+        file_location = os.path.join(UNPROCESSED_VIDEOS_DIRECTORY, file_name + '.avi')
     return file_location
 
 
@@ -54,12 +55,12 @@ def run_image_capture(valid_image_capture_device, window_name='Image Capture'):
             break
         cv2.imshow(window_name, frame)
 
-        k = cv2.waitKey(1)
-        if k % 256 == 27:
+        wait_key = cv2.waitKey(1)
+        if wait_key % 256 == 27:
             # ESC pressed
             print("Closing...")
             break
-        elif k % 256 == 32:
+        elif wait_key % 256 == 32:
             # SPACE pressed
             capture_image(frame)
             img_counter += 1
@@ -72,7 +73,7 @@ def run_face_detecting_camera(valid_image_capture_device, window_name='Image Cap
     cam = cv2.VideoCapture(valid_image_capture_device)
     cv2.namedWindow(window_name)
     img_counter = 0
-    face_cascade_path = "haarcascade_frontalface_default.xml"
+    face_cascade_path = FACE_CASCADE_PATH
     face_cascade = cv2.CascadeClassifier(face_cascade_path)
     while True:
         ret, frame = cam.read()
@@ -86,26 +87,31 @@ def run_face_detecting_camera(valid_image_capture_device, window_name='Image Cap
             minNeighbors=5,
             minSize=(30, 30)
         )
-        k = cv2.waitKey(1)
-        if k % 256 == 27:
+        wait_key = cv2.waitKey(1)
+        if wait_key % 256 == 27:
             # ESC pressed
             print("Closing...")
             break
-        elif k % 256 == 32:
+        elif wait_key % 256 == 32:
             # SPACE pressed
-            if faces:
+            if len(faces) > 0:
                 # Draw a rectangle around the faces
-                if faces > 1:
+                if len(faces) > 1:
                     print("Capturing multiple faces...")
                 else:
                     print("Capturing single faces...")
-                for (x, y, w, h) in faces:
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            capture_image(frame)
+            if display_grey:
+                capture_image(gray)
+            else:
+                capture_image(frame)
             img_counter += 1
         if display_grey:
+            for (x, y, w, h) in faces:
+                cv2.rectangle(gray, (x, y), (x + w, y + h), (0, 255, 0), 2)
             cv2.imshow(window_name, gray)
         else:
+            for (x, y, w, h) in faces:
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             cv2.imshow(window_name, frame)
     cam.release()
     cv2.destroyAllWindows()
@@ -147,7 +153,10 @@ def run_automated_face_image_capture(valid_image_capture_device, window_name='Im
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             if img_counter < IMAGE_COUNT_LIMIT:
                 capture_image(frame)
-            img_counter += 1
+                img_counter += 1
+            else:
+                print("IMAGE COUNT LIMIT:", IMAGE_COUNT_LIMIT)
+                break
         if display_grey:
             cv2.imshow(window_name, gray)
         else:
@@ -160,7 +169,7 @@ def run_face_triggered_video_capture(valid_image_capture_device, window_name='Im
     cam = cv2.VideoCapture(valid_image_capture_device)
     cv2.namedWindow(window_name)
     file_locations = []
-    face_cascade_path = "haarcascade_frontalface_default.xml"
+    face_cascade_path = FACE_CASCADE_PATH
     face_cascade = cv2.CascadeClassifier(face_cascade_path)
     # Define the codec and create VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
