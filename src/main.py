@@ -11,7 +11,6 @@ unprocessed_images = os.listdir(UNPROCESSED_IMAGES_DIRECTORY)
 for image_name in unprocessed_images:
     image_path = os.path.join(UNPROCESSED_IMAGES_DIRECTORY, image_name)
     image_path_results = compare_unknown_face_to_known_faces(image_path)
-    known_faces_directory = ''
     if len(image_path_results) > 0:
         known_faces_directory = image_path_results[0]
         # TODO: create sqlite db record for the captured images
