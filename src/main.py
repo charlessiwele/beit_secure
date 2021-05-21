@@ -1,11 +1,13 @@
 import os
-from services.camera_services import valid_video_capture_devices, run_face_detecting_camera
+from services.camera_services import valid_video_capture_devices, run_face_detecting_camera, \
+    run_automated_face_image_capture
 from services.face_sec_services import compare_unknown_face_to_known_faces, copy_face_to_known_faces_directory, \
     create_known_faces_directory, remove_faces_file
 from settings import UNPROCESSED_IMAGES_DIRECTORY
 
 capture_devices = valid_video_capture_devices()
-run_face_detecting_camera(capture_devices[0], window_name='Image Capture', display_grey=False)
+# run_automated_face_image_capture(capture_devices[0], window_name='Image Capture', display_grey=True)
+run_face_detecting_camera(capture_devices[0], window_name='Image Capture', display_grey=True)
 
 unprocessed_images = os.listdir(UNPROCESSED_IMAGES_DIRECTORY)
 for image_name in unprocessed_images:

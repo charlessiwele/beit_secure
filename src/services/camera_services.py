@@ -73,8 +73,7 @@ def run_face_detecting_camera(valid_image_capture_device, window_name='Image Cap
     cam = cv2.VideoCapture(valid_image_capture_device)
     cv2.namedWindow(window_name)
     img_counter = 0
-    face_cascade_path = FACE_CASCADE_PATH
-    face_cascade = cv2.CascadeClassifier(face_cascade_path)
+    face_cascade = cv2.CascadeClassifier(FACE_CASCADE_PATH)
     while True:
         ret, frame = cam.read()
         if not ret:
@@ -88,6 +87,9 @@ def run_face_detecting_camera(valid_image_capture_device, window_name='Image Cap
             minSize=(30, 30)
         )
         wait_key = cv2.waitKey(1)
+        if display_grey:
+            frame = gray
+        write_text_on_frame(frame, text=datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
         if wait_key % 256 == 27:
             # ESC pressed
             print("Closing...")
@@ -100,19 +102,11 @@ def run_face_detecting_camera(valid_image_capture_device, window_name='Image Cap
                     print("Capturing multiple faces...")
                 else:
                     print("Capturing single faces...")
-            if display_grey:
-                capture_image(gray)
-            else:
-                capture_image(frame)
+            capture_image(frame)
             img_counter += 1
-        if display_grey:
-            for (x, y, w, h) in faces:
-                cv2.rectangle(gray, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            cv2.imshow(window_name, gray)
-        else:
-            for (x, y, w, h) in faces:
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            cv2.imshow(window_name, frame)
+        for (x, y, w, h) in faces:
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.imshow(window_name, frame)
     cam.release()
     cv2.destroyAllWindows()
 
@@ -135,32 +129,29 @@ def run_automated_face_image_capture(valid_image_capture_device, window_name='Im
             minNeighbors=5,
             minSize=(30, 30)
         )
+        if display_grey:
+            frame = gray
+        write_text_on_frame(frame, text=datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
         k = cv2.waitKey(1)
         if k % 256 == 27:
             # ESC pressed
             print("Closing...")
             break
-        elif k % 256 == 32:
-            # SPACE pressed
-            img_counter = 0
         if len(faces) > 0:
             # Draw a rectangle around the faces
             if len(faces) > 1:
                 print("Multiple faces detected...")
             else:
                 print("Single face detected...")
-            for (x, y, w, h) in faces:
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             if img_counter < IMAGE_COUNT_LIMIT:
                 capture_image(frame)
                 img_counter += 1
             else:
                 print("IMAGE COUNT LIMIT:", IMAGE_COUNT_LIMIT)
                 break
-        if display_grey:
-            cv2.imshow(window_name, gray)
-        else:
-            cv2.imshow(window_name, frame)
+        for (x, y, w, h) in faces:
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.imshow(window_name, frame)
     cam.release()
     cv2.destroyAllWindows()
 
@@ -187,6 +178,8 @@ def run_face_triggered_video_capture(valid_image_capture_device, window_name='Im
             minNeighbors=5,
             minSize=(30, 30)
         )
+        if display_grey:
+            frame = gray
         k = cv2.waitKey(1)
         if k % 256 == 27:
             # ESC pressed
@@ -204,20 +197,13 @@ def run_face_triggered_video_capture(valid_image_capture_device, window_name='Im
                 else:
                     print("Single face detected...")
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            if display_grey:
-                write_text_on_frame(gray, text=datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
-                video_output.write(gray)
-            else:
-                write_text_on_frame(frame, text=datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
-                video_output.write(frame)
+            write_text_on_frame(frame, text=datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+            video_output.write(frame)
         else:
             if recording:
                 recording = False
                 video_output.release()
-        if display_grey:
-            cv2.imshow(window_name, gray)
-        else:
-            cv2.imshow(window_name, frame)
+        cv2.imshow(window_name, frame)
     cam.release()
     cv2.destroyAllWindows()
     return file_locations
@@ -225,4 +211,4 @@ def run_face_triggered_video_capture(valid_image_capture_device, window_name='Im
 
 def write_text_on_frame(img, text=datetime.now().strftime("%Y/%m/%d %H:%M:%S")):
     font = cv2.FONT_HERSHEY_PLAIN
-    cv2.putText(img, text, (10, 500), font, 4, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(img, text, (10, 450), font, 1, (255, 255, 255), 2, cv2.LINE_AA)

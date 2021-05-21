@@ -2,12 +2,33 @@ import os
 import random
 import string
 from shutil import copyfile
-
+import cv2
 import face_recognition
-from settings import FACE_SEC_KNOWN_FACES_DIRECTORY, FACE_SEC_UNKNOWN_FACES_DIRECTORY
+from settings import FACE_SEC_KNOWN_FACES_DIRECTORY, FACE_SEC_UNKNOWN_FACES_DIRECTORY, FACE_CASCADE_PATH
 
 os.makedirs(FACE_SEC_KNOWN_FACES_DIRECTORY, exist_ok=True)
 
+
+def run_potential_face_match_tolerance_increment(unknown_face, known_faces_encoded, known_face_directory):
+    face_cascade = cv2.CascadeClassifier(FACE_CASCADE_PATH)
+    potential_match = None
+    faces = face_cascade.detectMultiScale(
+        unknown_face,
+        scaleFactor=1.1,
+        minNeighbors=5,
+        minSize=(30, 30)
+    )
+
+    unknown_face_encoded = face_recognition.face_encodings(unknown_face, known_face_locations=faces)
+    if len(unknown_face_encoded) > 0:
+        for tolerance in range(5, 9):
+            # results is an array of True/False telling if the unknown face matched anyone in the known_faces array
+            tolerance = float(tolerance/10)
+            results = face_recognition.compare_faces(known_faces_encoded, unknown_face_encoded[0], tolerance=tolerance)
+            if True in results:
+                potential_match = os.path.join(FACE_SEC_KNOWN_FACES_DIRECTORY, known_face_directory)
+                break
+    return potential_match
 
 def compare_unknown_face_to_known_faces(unknown_face_path):
     # Load the jpg files into numpy arrays
@@ -22,15 +43,36 @@ def compare_unknown_face_to_known_faces(unknown_face_path):
             known_face = face_recognition.load_image_file(face_path)
             # Get the face encodings for each face in each image file
             # Since there could be more than one face in each image, it returns a list of encodings.
+            face_cascade = cv2.CascadeClassifier(FACE_CASCADE_PATH)
+            faces = face_cascade.detectMultiScale(
+                known_face,
+                scaleFactor=1.1,
+                minNeighbors=5,
+                minSize=(30, 30)
+            )
             known_face_encoding = face_recognition.face_encodings(known_face)
-            known_faces_encoded.append(known_face_encoding)
+            if len(known_face_encoding) > 0:
+                known_face_encoding = known_face_encoding[0]
+                known_faces_encoded.append(known_face_encoding)
+            else:
+                known_face_encoding = face_recognition.face_encodings(known_face, known_face_locations=faces)
+                if len(known_face_encoding) > 0:
+                    known_face_encoding = known_face_encoding[0]
+                    known_faces_encoded.append(known_face_encoding)
+                else:
+                    continue
         unknown_face = face_recognition.load_image_file(unknown_face_path)
-        unknown_face_encoded = face_recognition.face_encodings(unknown_face)[0]
-        # results is an array of True/False telling if the unknown face matched anyone in the known_faces array
-        results = face_recognition.compare_faces(known_faces_encoded, unknown_face_encoded, tolerance=0.5)
-        if True in results[0]:
-            potential_match = os.path.join(FACE_SEC_KNOWN_FACES_DIRECTORY, known_face_directory)
-            if potential_match not in potential_matches:
+        unknown_face_encoded = face_recognition.face_encodings(unknown_face)
+        if len(unknown_face_encoded) > 0:
+            # results is an array of True/False telling if the unknown face matched anyone in the known_faces array
+            results = face_recognition.compare_faces(known_faces_encoded, unknown_face_encoded[0], tolerance=0.5)
+            if True in results:
+                potential_match = os.path.join(FACE_SEC_KNOWN_FACES_DIRECTORY, known_face_directory)
+                if potential_match not in potential_matches:
+                    potential_matches.append(potential_match)
+        else:
+            potential_match = run_potential_face_match_tolerance_increment(unknown_face, known_faces_encoded, known_face_directory)
+            if potential_match is not None and potential_match not in potential_matches:
                 potential_matches.append(potential_match)
     return potential_matches
 
