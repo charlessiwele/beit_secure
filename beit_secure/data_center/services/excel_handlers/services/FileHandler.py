@@ -1,9 +1,9 @@
 import os
 from datetime import datetime
-from excel_handlers.services import ENV
-from excel_handlers.services.ExcelHandler import ExcelHandler
-from excel_handlers.services.FileSystemHandler import FileSystemHandler
-from settings import DEFAULT_FILE_WRITE_NAME, DEFAULT_FILE_READ_NAME
+from data_center.services.excel_handlers.services import ENV
+from data_center.services.excel_handlers.services.ExcelHandler import ExcelHandler
+from data_center.services.excel_handlers.services.FileSystemHandler import FileSystemHandler
+from data_center.services.settings import DEFAULT_FILE_WRITE_NAME, DEFAULT_FILE_READ_NAME
 
 
 class FileHandler:

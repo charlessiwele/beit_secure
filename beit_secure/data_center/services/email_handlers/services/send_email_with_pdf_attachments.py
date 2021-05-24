@@ -3,7 +3,7 @@ import smtplib
 from email.message import EmailMessage
 from email.mime.application import MIMEApplication
 
-from settings import EMAIL_SMTP_SERVER, SENDER_EMAIL, SENDER_EMAIL_PASSWORD, BCC_EMAIL_RECIPIENTS, \
+from data_center.services.settings import EMAIL_SMTP_SERVER, SENDER_EMAIL, SENDER_EMAIL_PASSWORD, BCC_EMAIL_RECIPIENTS, \
     EMAIL_RETRIES_COUNT
 
 

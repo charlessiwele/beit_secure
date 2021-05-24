@@ -4,7 +4,7 @@ import yaml
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SRC_DIR = os.path.join(str(BASE_DIR), "src")
+SRC_DIR = os.path.join(str(BASE_DIR), "services")
 CONFIG_ROOT = os.path.join(SRC_DIR, "config.yaml")
 print(CONFIG_ROOT)
 file = open(CONFIG_ROOT)

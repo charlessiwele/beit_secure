@@ -1,9 +1,9 @@
 from fpdf import FPDF
 
-from src.settings import ORGANISATION_LOGO, QUOTATION_ITEMS_PER_PAGE
+from data_center.services.settings import ORGANISATION_LOGO, INVOICE_ITEMS_PER_PAGE
 
 
-class QuotationTemplate:
+class InvoiceTemplate:
     """ The model for the invoice resource """
 
     def __init__(self, data):
@@ -11,7 +11,7 @@ class QuotationTemplate:
         self.pdf = FPDF()
 
         self.data = data
-        self.pdf.set_title(f'{self.data.get("client_name")} | Quotation')
+        self.pdf.set_title(f'{self.data.get("client_name")} | Invoice')
         self.pdf.set_font('Arial', 'B', 8)
         self.invoice_detail_current_line = 18
         self.invoice_detail_summary_line = 270
@@ -25,10 +25,10 @@ class QuotationTemplate:
         self.header_details_end_y = self.header_details_start_y
         self.product_table_y = 100
 
-    def write_quotation_content(self, total, pages):
+    def write_invoice_content(self, total, pages):
         """ The central function for writing invoice content based on invoice data in instance """
         all_products = self.data.get('products')
-        if len(all_products) <= QUOTATION_ITEMS_PER_PAGE:
+        if len(all_products) <= INVOICE_ITEMS_PER_PAGE:
             last_page = True
             # 10 or less products posted to service, thus only one page required
             self.pdf.add_page()
@@ -44,8 +44,8 @@ class QuotationTemplate:
                 else:
                     last_page = False
 
-                first_index = 0 + i * QUOTATION_ITEMS_PER_PAGE
-                second_index = QUOTATION_ITEMS_PER_PAGE + i * QUOTATION_ITEMS_PER_PAGE
+                first_index = 0 + i * INVOICE_ITEMS_PER_PAGE
+                second_index = INVOICE_ITEMS_PER_PAGE + i * INVOICE_ITEMS_PER_PAGE
 
                 products = all_products[
                            first_index:
@@ -69,20 +69,20 @@ class QuotationTemplate:
 
         # invoice
         self.pdf.set_font('Arial', size=30)
-        self.write_text(self.margin_left, self.title_text_y, 'Quotation')
+        self.write_text(self.margin_left, self.title_text_y, 'Invoice')
 
-    def write_header_details(self, header_title= 'Generic Quotation'):
+    def write_header_details(self, header_title= 'Generic Invoice'):
         """ Draws the generic header content on the first page of the invoice """
         # image relative positioning, all other elements are relative to the logo positioning
 
         # date, invoice number, and period
-        self.pdf.set_font('Arial', size=12)
+        self.pdf.set_font('Arial', size=10)
         header_details_y = self.header_details_start_y
 
-        self.write_text(self.margin_left, header_details_y, f'Quotation No.: {self.data.get("quotation_number")}')
+        self.write_text(self.margin_left, header_details_y, f'Invoice No.: {self.data.get("invoice_number")}')
 
         header_details_y = header_details_y + 8
-        self.write_text(self.margin_left, header_details_y, f'Quoted By: {self.data.get("user")}')
+        self.write_text(self.margin_left, header_details_y, f'Invoiced By: {self.data.get("user")}')
 
         header_details_y = header_details_y + 8
         self.write_text(self.margin_left, header_details_y, f'Date: {self.data.get("date")}')
@@ -101,7 +101,7 @@ class QuotationTemplate:
         product_table_y = self.header_details_end_y + 10
 
         self.pdf.set_line_width(0.5)
-        self.pdf.line(15, product_table_y - 5, 195, product_table_y - 5)
+        self.pdf.line(15, product_table_y - 4, 195, product_table_y - 4)
 
         self.write_text(18, product_table_y, 'Product name:')
         self.write_text(105, product_table_y, 'SKU:')
@@ -118,7 +118,7 @@ class QuotationTemplate:
             title = product['title']
             sku = product['sku']
             quantity = product['quantity']
-            price = product['price']
+            price = '%.2f' % float(product['price'])
             product_total = '%.2f' % float(product['total'])
 
             if len(title) > 45:
@@ -130,7 +130,7 @@ class QuotationTemplate:
             self.write_text(105, product_table_y, str(sku))
             self.write_text(125, product_table_y, str(quantity))
             self.write_text(140, product_table_y, str(price))
-            self.write_text(165, product_table_y, str('%.2f' % float(product_total)))
+            self.write_text(165, product_table_y, str(product_total))
             self.pdf.set_line_width(0.3)
 
             product_table_y = product_table_y + 2
@@ -143,7 +143,7 @@ class QuotationTemplate:
 
             # draw total amount value
             self.pdf.set_font('Arial', 'B', 22)
-            self.write_text(145, self.invoice_detail_summary_line, 'R' + str('%.2f' % float(total)))
+            self.write_text(145, self.invoice_detail_summary_line, 'R' + str(total))
 
         self.pdf.set_font('Arial', 'B', 10)
         self.write_text(self.margin_left, self.invoice_detail_summary_line, f'Page {current_page_index + 1} of {page_total}')

@@ -1,9 +1,8 @@
 import os
 from datetime import datetime
-from settings import IMAGE_COUNT_LIMIT, UNPROCESSED_IMAGES_DIRECTORY, UNPROCESSED_VIDEOS_DIRECTORY
+from data_center.services.settings import IMAGE_COUNT_LIMIT, UNPROCESSED_IMAGES_DIRECTORY, UNPROCESSED_VIDEOS_DIRECTORY
 import cv2
-
-from settings import FACE_CASCADE_PATH
+from data_center.services.settings import FACE_CASCADE_PATH
 
 
 def valid_video_capture_devices():

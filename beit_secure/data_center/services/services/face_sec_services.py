@@ -4,7 +4,7 @@ import string
 from shutil import copyfile
 import cv2
 import face_recognition
-from settings import FACE_SEC_KNOWN_FACES_DIRECTORY, FACE_SEC_UNKNOWN_FACES_DIRECTORY, FACE_CASCADE_PATH
+from data_center.services.settings import FACE_SEC_KNOWN_FACES_DIRECTORY, FACE_SEC_UNKNOWN_FACES_DIRECTORY, FACE_CASCADE_PATH
 
 os.makedirs(FACE_SEC_KNOWN_FACES_DIRECTORY, exist_ok=True)
 

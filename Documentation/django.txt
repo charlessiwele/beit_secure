@@ -1,0 +1,64 @@
+//install manage.py file location
+cd ~/Documents/Projects/FilERP/filerp
+
+//install curl
+sudo apt install curl
+
+//install django
+pip install Django
+
+//Create a project
+django-admin startproject filerp
+
+//Run the development server
+python manage.py runserver
+
+//Create app
+python manage.py startapp data_center
+
+//Upgrade pip
+python -m pip install --upgrade pip
+
+//Generate db migration files
+python manage.py makemigrations
+
+//Run db migrations
+python manage.py migrate
+
+//Create super user
+python manage.py createsuperuser
+Username: adminuser
+Email address: adminuser@adminuser.adminuser
+Password: adminuser
+
+//Generate requirements.txt
+pip3 freeze>requirements.txt
+OR
+sudo sh -c 'sudo pip3 freeze > requirements.txt'
+#create it on the same level as manage.py
+
+//Install distutils
+sudo apt-get install python3-distutils
+
+//Install python3-apt
+sudo apt-get install python3-apt
+
+//Deployment Steps
+sudo apt-get install gcc
+sudo apt-get install Python3.8.5-dev
+pip install uwsgi
+python manage.py collectstatic
+
+cd /etc/uwsgi/apps-enabled/
+code django.ini
+
+//RUN DEPLOYED APP
+'uwsgi --http :8000 --module filerp.wsgi' OR 'gunicorn filerp.wsgi'
+
+
+Installing from local archives
+Unix/macOS
+python3 -m pip install ~/Downloads/face_recognition_models-0.3.0.tar.gz
+
+python3 -m pip install -r requirements.txt
+

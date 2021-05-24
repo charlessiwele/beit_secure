@@ -1,0 +1,5 @@
+//add everything
+git add .
+
+//untracked everything
+git rm -r --cached
